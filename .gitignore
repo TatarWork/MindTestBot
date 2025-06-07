@@ -1,0 +1,21 @@
+# Общие файлы
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.swp
+
+# Логи и временные файлы
+*.log
+*.tmp
+
+# Настройки IDE
+.vs/
+.idea/
+.vscode/
+
+# Файлы сборки
+*.exe
+*.dll
+*.pdb
