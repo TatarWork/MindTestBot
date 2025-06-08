@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MindBot.EF.Migrations
 {
     [DbContext(typeof(MindBotDbContext))]
-    [Migration("20250608113426_InitDatabase")]
-    partial class InitDatabase
+    [Migration("20250608180349_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,9 @@ namespace MindBot.EF.Migrations
 
             modelBuilder.Entity("MindBot.EF.Entities.UserStateEntity", b =>
                 {
-                    b.Property<long>("ChatId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ChatId"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("AnswersJson")
                         .IsRequired()
@@ -39,6 +37,9 @@ namespace MindBot.EF.Migrations
                         .HasColumnType("jsonb")
                         .HasDefaultValue("[]")
                         .HasColumnName("AnswersJson");
+
+                    b.Property<long>("ChatId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -81,10 +82,7 @@ namespace MindBot.EF.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.HasKey("ChatId");
-
-                    b.HasIndex("ChatId")
-                        .IsUnique();
+                    b.HasKey("Id");
 
                     b.ToTable("UserStates");
                 });

@@ -9,6 +9,13 @@ namespace MindBot.EF.Entities.Base
     public abstract class BaseEntity
     {
         /// <summary>
+        /// ИД записи
+        /// </summary>
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+
+        /// <summary>
         /// Дата создания записи
         /// </summary>
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

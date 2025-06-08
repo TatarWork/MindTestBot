@@ -1,13 +1,12 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace MindBot.EF.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDatabase : Migration
+    public partial class InitDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,8 +15,8 @@ namespace MindBot.EF.Migrations
                 name: "UserStates",
                 columns: table => new
                 {
-                    ChatId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ChatId = table.Column<long>(type: "bigint", nullable: false),
                     CurrentQuestion = table.Column<int>(type: "integer", nullable: false),
                     AnswersJson = table.Column<string>(type: "jsonb", nullable: false, defaultValue: "[]"),
                     IsCompleted = table.Column<bool>(type: "boolean", nullable: false),
@@ -33,14 +32,8 @@ namespace MindBot.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserStates", x => x.ChatId);
+                    table.PrimaryKey("PK_UserStates", x => x.Id);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserStates_ChatId",
-                table: "UserStates",
-                column: "ChatId",
-                unique: true);
         }
 
         /// <inheritdoc />

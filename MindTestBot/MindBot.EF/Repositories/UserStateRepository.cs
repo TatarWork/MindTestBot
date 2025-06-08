@@ -40,10 +40,8 @@ namespace MindBot.EF.Repositories
         {
             try
             {
-                var result = await _db.FindAsync<UserStateEntity>(chatId);
-
-                if (result != null && result.IsDeleted)
-                    return null;
+                var result = await _db.UserStates
+                    .SingleOrDefaultAsync(x => x.ChatId == chatId && x.IsDeleted == false);
 
                 return result;
             }
@@ -118,7 +116,7 @@ namespace MindBot.EF.Repositories
                 var existEntity = await GetUserState(chatId);
 
                 if (existEntity == null)
-                    throw new Exception("Не удалось получить состояние пользователя из базы данных");
+                    return;
 
                 if (forseDelete)
                 {

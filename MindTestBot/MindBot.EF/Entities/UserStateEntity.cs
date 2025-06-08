@@ -9,13 +9,11 @@ namespace MindBot.EF.Entities
     /// <summary>
     /// Сущность для работы с ответами пользователей
     /// </summary>
-    [Index(nameof(ChatId), IsUnique = true)]
     public class UserStateEntity : BaseEntity
     {
         /// <summary>
         /// ИД чата пользователя в Телеграм
         /// </summary>
-        [Key]
         public long ChatId { get; set; }
 
         /// <summary>
@@ -79,22 +77,6 @@ namespace MindBot.EF.Entities
         {
             get => System.Text.Json.JsonSerializer.Deserialize<List<char>>(AnswersJson)!;
             set => AnswersJson = System.Text.Json.JsonSerializer.Serialize(value);
-        }
-
-        /// <summary>
-        /// Метод добавления ответа пользователя
-        /// </summary>
-        /// <param name="answer"></param>
-        public void AddAnswer(char answer)
-        {
-            var answers = Answers;
-
-            if (answers == null)
-                answers = new List<char>();
-
-            answers.Add(answer);
-
-            Answers = answers;
         }
     }
 }

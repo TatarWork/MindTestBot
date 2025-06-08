@@ -19,33 +19,45 @@ namespace MindBot.Services.Interfaces
         Task HandleCallbackQueryAsync(CallbackQuery callbackQuery);
 
         /// <summary>
-        /// Отправка приветствия администратору чат-бота
+        /// Команда приветствия, запускается при старте/перезапуске чат-бота
         /// </summary>
         /// <param name="chatId"></param>
+        /// <param name="username"></param>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
         /// <returns></returns>
-        Task SendWelcomeMessageAdminAsync(long chatId, string username);
+        Task SendCommandWelcome(long chatId, string username, string? firstName = null, string? lastName = null);
 
         /// <summary>
-        /// Отправка приветствия пользователю чат-бота
+        /// Отправка сообщения-приветствия пользователю
         /// </summary>
         /// <param name="chatId"></param>
+        /// <param name="username"></param>
         /// <returns></returns>
-        Task SendWelcomeMessageAsync(long chatId, string username);
-
-        Task HandleStartTestCommand(long chatId, string username);
-
-        Task HandleTestAnswerCommand(long chatId, string? answer);
-
-        Task SendErrorMessage(long chatId);
+        Task SendMessageWelcomeUser(long chatId, string username);
 
         /// <summary>
-        /// Генерация результата по итогам формы вопросов
+        /// Отправка сообщения-приветствия админу
         /// </summary>
         /// <param name="chatId"></param>
-        /// <param name="userState"></param>
+        /// <param name="username"></param>
         /// <returns></returns>
-        Task GenerateAnalysisResultAsync(long chatId, string username);
+        Task SendMessageWelcomeAdmin(long chatId, string username);
 
-        Task CheckGetBonus(long chatId, string username);
+        /// <summary>
+        /// Команда запуска тестирования пользователя
+        /// </summary>
+        /// <param name="chatId"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        Task SendCommandTestStart(long chatId, string username);
+
+        /// <summary>
+        /// Команда обработки ответов в ходе тестирования пользователя
+        /// </summary>
+        /// <param name="chatId"></param>
+        /// <param name="answer"></param>
+        /// <returns></returns>
+        Task SendCommandTestAnswer(long chatId, string? answer);
     }
 }

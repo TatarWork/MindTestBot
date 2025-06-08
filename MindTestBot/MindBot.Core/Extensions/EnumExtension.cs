@@ -9,6 +9,11 @@ namespace MindBot.Core.Extensions
             return value.ToString();
         }
 
+        public static string ToCodeValue(this BonusTypeEnum value)
+        {
+            return value.ToString();
+        }
+
         /// <summary>
         /// Преобразует строковый код перечисления к типизированному элементу перечисления
         /// </summary>
@@ -30,7 +35,7 @@ namespace MindBot.Core.Extensions
             switch (value)
             {
                 case SystemEnum.WelcomeMessageUser:
-                    return @"я Дарья Татар, маркетолог и эксперт созданию продуктов, спасибо что откликнулись и выделили время на прохождение теста, в конце вас ждет подарок на выбор от меня, тест займет не более 10 минут вашего времени";
+                    return @"Давай начнем тест";
                 case SystemEnum.WelcomeMessageAdmin:
                     return "Это чат-бот Дарьи Татар, сюда будут приходить уведомления о пользователях прошедших тестирование";
                 case SystemEnum.StartTesting:
@@ -46,9 +51,9 @@ namespace MindBot.Core.Extensions
             switch (value)
             {
                 case BonusTypeEnum.Consulting:
-                    return "";
+                    return "1";
                 case BonusTypeEnum.VipChannel:
-                    return "";
+                    return "2";
                 case BonusTypeEnum.None:
                 default:
                     return "Неизвестно";
