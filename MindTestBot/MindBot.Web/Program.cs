@@ -1,12 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using MindTestBot;
-using MindTestBot.Interfaces;
-using MindTestBot.Models;
-using MindTestBot.Services;
+using MindBot.Core;
+using MindBot.Core.Options;
+using MindBot.EF;
+using MindBot.EF.Interfaces;
+using MindBot.EF.Repositories;
+using MindBot.Services.BackgroundServices;
+using MindBot.Services.Interfaces;
+using MindBot.Services.Services;
 using Serilog;
 using Serilog.Formatting.Json;
 using Telegram.Bot;
+
+var appName = "MindTestBot";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +30,7 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
-    Log.Information($"Starting {nameof(MindTestBot)} application");
+    Log.Information($"Starting {appName} application");
 
     builder.Host.UseSerilog((context, services, configuration) =>
     {
@@ -49,13 +55,13 @@ try
     ConfigureServices(builder.Services, builder, builder.Configuration);
 
     var app = builder.Build();
-    await ConfigureMiddleWare(app, builder);
+    ConfigureMiddleWare(app, builder);
 
     app.Run(async (context) =>
     {
         var response = context.Response;
         response.ContentType = "text/html; charset=utf-8";
-        await response.WriteAsync($"<h2>{nameof(MindTestBot)}</h2><h3>Приложение запущено</h3>");
+        await response.WriteAsync($"<h2>{appName}</h2><h3>Приложение запущено</h3>");
     });
 
     app.Run();
@@ -74,10 +80,10 @@ void ConfigureServices(IServiceCollection services, WebApplicationBuilder builde
     /// Подключение к БД
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-    var dbConncetionString = configuration.GetConnectionString(SettingModel.DatabaseConnectionName);
-    services.AddDbContext<AppDbContext>(options => options.UseNpgsql(dbConncetionString), ServiceLifetime.Transient);
+    var dbConncetionString = configuration.GetConnectionString(Settings.DatabaseConnectionName);
+    services.AddDbContext<MindBotDbContext>(options => options.UseNpgsql(dbConncetionString), ServiceLifetime.Transient);
 
-    services.AddOptions<OptionModel>().Configure(options =>
+    services.AddOptions<TelegramOption>().Configure(options =>
     {
         configuration.GetSection("TelegramBot").Bind(options);
     });
@@ -86,22 +92,31 @@ void ConfigureServices(IServiceCollection services, WebApplicationBuilder builde
         .AddHttpClient("telegram_bot_client")
         .AddTypedClient<ITelegramBotClient>((httpClient, sp) =>
         {
-            var options = sp.GetRequiredService<IOptions<OptionModel>>();
+            var options = sp.GetRequiredService<IOptions<TelegramOption>>();
             return new TelegramBotClient(options.Value.Token, httpClient);
         });
+
+    /// Подключение репозитория
+    services.AddTransient<IUserStateRepository, UserStateRepository>();
+
+    /// Подключение сервисов чат-бота
+    services.AddTransient<IUserStateService, UserStateService>();
+    services.AddTransient<IQuestionService, QuestionService>();
+    services.AddTransient<IScriptService, ScriptService>();
+    services.AddTransient<IBotService, BotService>();
+
+    /// Регистрируем фоновый сервис
+    builder.Services.AddHostedService<BotBackgroundService>();
 }
 
-async Task ConfigureMiddleWare(WebApplication app, WebApplicationBuilder builder)
+void ConfigureMiddleWare(WebApplication app, WebApplicationBuilder builder)
 {
     using (var scope = app.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
 
-        var context = services.GetRequiredService<AppDbContext>();
+        var context = services.GetRequiredService<MindBotDbContext>();
         context.Database.Migrate();
-
-        var testService = EntrepreneurTestService.Instance;
-        await testService.InitializeQuestionsAsync(context);
     }
 
     if (app.Environment.IsDevelopment())
@@ -115,3 +130,4 @@ async Task ConfigureMiddleWare(WebApplication app, WebApplicationBuilder builder
 
     app.UseHttpsRedirection();
 }
+

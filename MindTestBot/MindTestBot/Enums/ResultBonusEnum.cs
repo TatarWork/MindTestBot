@@ -1,5 +1,8 @@
 ﻿namespace MindTestBot.Enums
 {
+    /// <summary>
+    /// Перечисление для бонусов по итогам тестирования
+    /// </summary>
     public enum ResultBonusEnum
     {
         /// <summary>

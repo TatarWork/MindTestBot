@@ -1,7 +1,7 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace MindTestBot.Interfaces
+namespace MindBot.Services.Interfaces
 {
     public interface IBotService
     {

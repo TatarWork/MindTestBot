@@ -1,11 +1,12 @@
-﻿using MindTestBot.Interfaces;
-using Telegram.Bot.Exceptions;
+﻿using Microsoft.Extensions.Logging;
+using MindBot.Core.Extensions;
+using MindBot.Core.Helpers;
+using MindBot.Services.Interfaces;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
-using MindTestBot.Helpers;
-using MindTestBot.Extensions;
 
-namespace MindTestBot.Services
+namespace MindBot.Services.Services
 {
     public class BotService : IBotService
     {

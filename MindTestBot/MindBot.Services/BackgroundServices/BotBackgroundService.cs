@@ -1,9 +1,11 @@
-﻿using MindTestBot.Interfaces;
+﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using MindBot.Services.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace MindTestBot.Services
+namespace MindBot.Services.BackgroundServices
 {
     public class BotBackgroundService : BackgroundService
     {

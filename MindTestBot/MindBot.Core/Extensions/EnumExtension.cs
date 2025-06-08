@@ -1,15 +1,10 @@
-﻿using MindTestBot.Enums;
+﻿using MindBot.Core.Enums;
 
-namespace MindTestBot.Extensions
+namespace MindBot.Core.Extensions
 {
     public static class EnumExtension
     {
         public static string ToCodeValue(this SystemEnum value)
-        {
-            return value.ToString();
-        }
-
-        public static string ToCodeValue(this ResultBonusEnum value)
         {
             return value.ToString();
         }
@@ -33,20 +28,28 @@ namespace MindTestBot.Extensions
         public static string ToStringValue(this SystemEnum value)
         {
             switch (value)
-            {              
+            {
+                case SystemEnum.WelcomeMessageUser:
+                    return @"я Дарья Татар, маркетолог и эксперт созданию продуктов, спасибо что откликнулись и выделили время на прохождение теста, в конце вас ждет подарок на выбор от меня, тест займет не более 10 минут вашего времени";
+                case SystemEnum.WelcomeMessageAdmin:
+                    return "Это чат-бот Дарьи Татар, сюда будут приходить уведомления о пользователях прошедших тестирование";
+                case SystemEnum.StartTesting:
+                    return "Начать тест";
+                case SystemEnum.None:
                 default:
                     return "Неизвестно";
             }
         }
 
-        public static string ToStringValue(this ResultBonusEnum value)
+        public static string ToStringValue(this BonusTypeEnum value)
         {
             switch (value)
             {
-                case ResultBonusEnum.Consulting:
+                case BonusTypeEnum.Consulting:
                     return "";
-                case ResultBonusEnum.VipChannel:
+                case BonusTypeEnum.VipChannel:
                     return "";
+                case BonusTypeEnum.None:
                 default:
                     return "Неизвестно";
             }
