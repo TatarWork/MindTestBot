@@ -26,11 +26,16 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Build with version
-        run: |
-          dotnet build -c Release /p:Version=${{ env.VERSION }} /p:FileVersion=${{ env.VERSION }}
+      - name: Restore dependencies
+        working-directory: ./src/MindTestBot/MindBot.Web  # Укажите вашу папку с проектом
+        run: dotnet restore
 
-      - name: Publish artifacts
+      - name: Build
+        working-directory: ./src/
+        run: dotnet build -c Release /p:Version=${{ env.VERSION }}
+
+      - name: Publish
+        working-directory: ./src/MindTestBot/MindBot.Web
         run: dotnet publish -c Release -o ./publish
 
       - name: Prepare deployment package
