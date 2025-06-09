@@ -45,6 +45,16 @@ jobs:
           echo "Version: ${{ env.VERSION }}" > deploy/version.txt
           tar -czvf deploy.tar.gz deploy/
 
+      - name: Test SSH connection
+        uses: appleboy/ssh-action@v1
+        with:
+           host: ${{ secrets.SERVER_IP }}
+           username: ${{ secrets.SSH_USER }}
+           key: ${{ secrets.DEPLOY_SSH_KEY }}
+           script: |
+            echo "Successfully connected!"
+            whoami
+
       - name: Deploy to Beget VPS
         uses: appleboy/ssh-action@v1
         with:
