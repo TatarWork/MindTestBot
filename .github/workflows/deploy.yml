@@ -41,7 +41,7 @@ jobs:
       - name: Prepare deployment package
         run: |
           mkdir -p deploy
-          cp -r ./publish/* deploy/
+          cp -r ./MindTestBot/MindBot.Web/publish/* deploy/
           echo "Version: ${{ env.VERSION }}" > deploy/version.txt
           tar -czvf deploy.tar.gz deploy/
 
