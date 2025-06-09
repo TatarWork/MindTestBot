@@ -26,8 +26,13 @@
         Result = 3,
 
         /// <summary>
-        /// Получен бонус
+        /// Получен бонус - консультация
         /// </summary>
-        SendBonus = 4
+        SendBonusConsult = 4,
+
+        /// <summary>
+        /// Получен бонус - ссылка на закрытый телеграм-канал
+        /// </summary>
+        SendBonusVipChannel = 5,
     }
 }

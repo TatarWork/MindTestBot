@@ -333,6 +333,7 @@ namespace MindBot.Services.Services
                     if (callbackData == BonusTypeEnum.Consulting.ToCodeValue())
                     {
                         userState.IsGetBonus = true;
+                        userState.State = UserStateEnum.SendBonusConsult;
 
                         await _botClient.SendMessage(
                             chatId: chatId,
@@ -356,6 +357,7 @@ namespace MindBot.Services.Services
                     else if (callbackData == BonusTypeEnum.VipChannel.ToCodeValue())
                     {
                         userState.IsGetBonus = true;
+                        userState.State = UserStateEnum.SendBonusVipChannel;
 
                         var subscribeVipChannelKeyboard = new InlineKeyboardMarkup(new[]
                         {
