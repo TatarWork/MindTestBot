@@ -78,7 +78,7 @@ jobs:
             dotnet ef database update
             
             # Рестарт сервиса
-            systemctl restart mindbot.service
+            sudo systemctl restart mindbot.service
             
             # Очистка старых релизов (храним последние 5)
             ls -dt /home/deployer/releases/mindbot/* | tail -n +6 | xargs rm -rf
