@@ -107,6 +107,9 @@ void ConfigureServices(IServiceCollection services, WebApplicationBuilder builde
 
     /// Регистрируем фоновый сервис
     builder.Services.AddHostedService<BotBackgroundService>();
+
+    var strHostValue = builder.Configuration["AppHost:HostValue"];
+    builder.WebHost.UseUrls(strHostValue);
 }
 
 void ConfigureMiddleWare(WebApplication app, WebApplicationBuilder builder)
