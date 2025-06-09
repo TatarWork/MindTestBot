@@ -235,7 +235,7 @@ namespace MindBot.Services.Services
                     await _botClient.DeleteMessage(chatId, loadingMessage.MessageId);
 
                     var messageResult = "🎉 Спасибо, что приняли участие в исследовании это очень ценно для меня, в качестве благодарности выберите любой подарок:" +
-                        "\n\n1 консультация 15 минут - как нанять нейросети на работу\n2 доступ в закрытый канал «бизнес без игрушек»";
+                        "\n\n1 безоплатная консультация 15 минут - как нанять нейросети на работу\n2 доступ в закрытый канал «бизнес без игрушек»";
 
                     var getResultBonusKeyboard = new InlineKeyboardMarkup(new[]
                     {
@@ -389,7 +389,6 @@ namespace MindBot.Services.Services
                 }
 
                 await _userStateService.UpdateUserState(chatId, userState);
-
                 await _botClient.AnswerCallbackQuery(callbackQuery.Id);
             }
             catch (Exception ex)
