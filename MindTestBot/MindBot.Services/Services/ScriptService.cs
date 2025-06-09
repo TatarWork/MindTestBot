@@ -115,7 +115,6 @@ namespace MindBot.Services.Services
                     })
                     {
                         ResizeKeyboard = true,
-                        OneTimeKeyboard = true,
                     };
 
                 await _botClient.SendMessage(
@@ -299,7 +298,6 @@ namespace MindBot.Services.Services
                     replyMarkup: new ReplyKeyboardMarkup(buttons)
                     {
                         ResizeKeyboard = true,
-                        OneTimeKeyboard = true
                     });
 
                 _logger.LogInformation("Отправлен вопрос {QuestionNumber} в чат с ИД: {ChatId}", question.Order, chatId);
@@ -361,13 +359,24 @@ namespace MindBot.Services.Services
 
                         var subscribeVipChannelKeyboard = new InlineKeyboardMarkup(new[]
                         {
-                        InlineKeyboardButton.WithUrl("Перейти", _telegramOption.ChannelInviteLink)
-                    });
+                            InlineKeyboardButton.WithUrl("Перейти", _telegramOption.ChannelInviteLink)
+                        });
 
                         await _botClient.SendMessage(
                             chatId: chatId,
                             text: "Закрытый телеграм канал «бизнес без игрушек»",
                             replyMarkup: subscribeVipChannelKeyboard);
+
+                        /// Уведомление админам о консультации
+
+                        foreach (var adminId in Settings.UserIdAdmin)
+                        {
+                            var message = $"👤 Пользователь @{userState.Username} (ID: {chatId}) получил ссылку на закрытый телеграм-канал.";
+
+                            await _botClient.SendMessage(
+                                chatId: adminId,
+                                text: message);
+                        }
 
                         _logger.LogInformation($"Пользователь выбрал бонус \"закрытый телеграм канал\" username: {userState.Username}, chatId: {userState.ChatId}");
                     }
