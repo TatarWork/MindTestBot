@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MindBot.Core;
+using MindBot.Core.Enums;
 using MindBot.Core.Extensions;
 using MindBot.Core.Helpers;
 using MindBot.EF.Entities;
@@ -41,7 +42,8 @@ namespace MindBot.EF.Repositories
             try
             {
                 var result = await _db.UserStates
-                    .SingleOrDefaultAsync(x => x.ChatId == chatId && x.IsDeleted == false);
+                    .SingleOrDefaultAsync(x => x.ChatId == chatId &&
+                        x.IsDeleted == false);
 
                 return result;
             }
@@ -64,7 +66,8 @@ namespace MindBot.EF.Repositories
 
                 var entity = new UserStateEntity
                 {
-                    ChatId = chatId
+                    ChatId = chatId,
+                    State = UserStateEnum.WelcomeMessage
                 };
 
                 await _db.AddAsync(entity);
@@ -90,14 +93,11 @@ namespace MindBot.EF.Repositories
                     throw new Exception("Не удалось получить состояние пользователя из базы данных");
 
                 existEntity.State = entity.State;
-                existEntity.Result = entity.Result;
                 existEntity.Answers = entity.Answers;
                 existEntity.CurrentQuestion = entity.CurrentQuestion;
                 existEntity.IsCompleted = entity.IsCompleted;
                 existEntity.IsGetBonus = entity.IsGetBonus;
-                existEntity.FirstName = entity.FirstName;
-                existEntity.LastName = entity.LastName;
-                existEntity.Username = entity.Username;
+                existEntity.UpdatedAt = DateTime.UtcNow;
 
                 _db.Update(existEntity);
             }

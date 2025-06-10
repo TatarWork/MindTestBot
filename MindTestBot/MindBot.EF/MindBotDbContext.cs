@@ -31,13 +31,6 @@ namespace MindBot.EF
                 entity.Property(e => e.AnswersJson)
                       .HasDefaultValue("[]")
                       .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.CreatedAt)
-                      .HasDefaultValueSql("NOW()");
-
-                entity.Property(e => e.UpdatedAt)
-                      .HasDefaultValueSql("NOW()")
-                      .ValueGeneratedOnAddOrUpdate();
             });
 
             modelBuilder.UseIdentityColumns();
