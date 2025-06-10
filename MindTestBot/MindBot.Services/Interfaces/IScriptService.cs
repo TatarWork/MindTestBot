@@ -22,35 +22,29 @@ namespace MindBot.Services.Interfaces
         /// Команда приветствия, запускается при старте/перезапуске чат-бота
         /// </summary>
         /// <param name="chatId"></param>
-        /// <param name="username"></param>
-        /// <param name="firstName"></param>
-        /// <param name="lastName"></param>
         /// <returns></returns>
-        Task SendCommandWelcome(long chatId, string username, string? firstName = null, string? lastName = null);
+        Task SendCommandWelcome(long chatId);
 
         /// <summary>
         /// Отправка сообщения-приветствия пользователю
         /// </summary>
         /// <param name="chatId"></param>
-        /// <param name="username"></param>
         /// <returns></returns>
-        Task SendMessageWelcomeUser(long chatId, string username);
+        Task SendMessageWelcomeUser(long chatId);
 
         /// <summary>
         /// Отправка сообщения-приветствия админу
         /// </summary>
         /// <param name="chatId"></param>
-        /// <param name="username"></param>
         /// <returns></returns>
-        Task SendMessageWelcomeAdmin(long chatId, string username);
+        Task SendMessageWelcomeAdmin(long chatId);
 
         /// <summary>
         /// Команда запуска тестирования пользователя
         /// </summary>
         /// <param name="chatId"></param>
-        /// <param name="username"></param>
         /// <returns></returns>
-        Task SendCommandTestStart(long chatId, string username);
+        Task SendCommandTestStart(long chatId);
 
         /// <summary>
         /// Команда обработки ответов в ходе тестирования пользователя

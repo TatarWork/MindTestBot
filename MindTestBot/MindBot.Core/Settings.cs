@@ -20,6 +20,6 @@
         /// <summary>
         /// Команда запуска тестирования
         /// </summary>
-        public const string CommandTestStart = "Начать тест";
+        public const string CommandTestStart = "⚡️Начать тест";
     }
 }

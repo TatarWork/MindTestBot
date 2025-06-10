@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MindBot.Core.Enums;
+﻿using MindBot.Core.Enums;
 using MindBot.EF.Entities.Base;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -39,30 +38,6 @@ namespace MindBot.EF.Entities
         /// Флаг - бонус получен
         /// </summary>
         public bool IsGetBonus { get; set; }
-
-        /// <summary>
-        /// Результат тестирования
-        /// </summary>
-        [MaxLength(500)]
-        public string? Result { get; set; }
-
-        /// <summary>
-        /// Имя клиента
-        /// </summary>
-        [MaxLength(50)]
-        public string? FirstName { get; set; }
-
-        /// <summary>
-        /// Фамилия клиента
-        /// </summary>
-        [MaxLength(50)]
-        public string? LastName { get; set; }
-
-        /// <summary>
-        /// Имя пользователя в системе телеграм
-        /// </summary>
-        [MaxLength(50)]
-        public string? Username { get; set; }
 
         /// <summary>
         /// Состояние польователя
