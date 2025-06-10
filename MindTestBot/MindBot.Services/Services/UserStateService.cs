@@ -39,13 +39,9 @@ namespace MindBot.Services.Services
                     Answers = userState.Answers,
                     ChatId = chatId,
                     CurrentQuestion = userState.CurrentQuestion,
-                    FirstName = userState.FirstName,
-                    LastName = userState.LastName,
                     IsCompleted = userState.IsCompleted,
                     IsGetBonus = userState.IsGetBonus,
-                    Result = userState.Result,
                     State = userState.State,
-                    Username = userState.Username
                 };
 
                 return result;
@@ -64,7 +60,7 @@ namespace MindBot.Services.Services
 
             try
             {
-                await _userStateRepository.DeleteUserState(chatId);
+                await _userStateRepository.DeleteUserState(chatId, true);
                 await _userStateRepository.SaveAsync();
                 await _userStateRepository.CreateUserState(chatId);
                 await _userStateRepository.SaveAsync();
@@ -148,13 +144,9 @@ namespace MindBot.Services.Services
                     throw new Exception("Не удалось получить текущую сессию пользователя");
 
                 userStateEntity.State = userState.State;
-                userStateEntity.Result = userState.Result;
                 userStateEntity.CurrentQuestion = userState.CurrentQuestion;
                 userStateEntity.IsCompleted = userState.IsCompleted;
                 userStateEntity.IsGetBonus = userState.IsGetBonus;
-                userStateEntity.FirstName = userState.FirstName;
-                userStateEntity.LastName = userState.LastName;
-                userStateEntity.Username = userState.Username;
 
                 await _userStateRepository.UpdateUserState(chatId, userStateEntity);
                 await _userStateRepository.SaveAsync();

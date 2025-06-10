@@ -41,18 +41,17 @@ namespace MindBot.Services.Services
             try
             {
                 var chatId = message.Chat.Id;
-                var username = message.From?.Username ?? "anonymous";
 
                 switch (message.Text?.Trim())
                 {
                     /// Приветствие
                     case Settings.CommandBotStart:
-                        await SendCommandWelcome(chatId, username, message.From?.FirstName, message.From?.LastName);
+                        await SendCommandWelcome(chatId);
                         break;
 
                     /// Запуск тестирования
                     case Settings.CommandTestStart:
-                        await SendCommandTestStart(chatId, username);
+                        await SendCommandTestStart(chatId);
                         break;
 
                     /// Обработка ответов в ходе тестирования
@@ -70,30 +69,21 @@ namespace MindBot.Services.Services
         }
 
         #region Welcome
-        public async Task SendCommandWelcome(long chatId, string username, string? firstName = null, string? lastName = null)
+        public async Task SendCommandWelcome(long chatId)
         {
             try
             {
-                _logger.LogInformation("Запуск бота для пользователя: {Username}", username);
+                _logger.LogInformation("Запуск бота для пользователя: {chatId}", chatId);
 
                 await _userStateService.RestartUserState(chatId);
 
-                var userState = await _userStateService.GetUserState(chatId);
-
-                userState.Username = username;
-                userState.FirstName = firstName;
-                userState.LastName = lastName;
-                userState.State = UserStateEnum.WelcomeMessage;
-
-                await _userStateService.UpdateUserState(chatId, userState);
-
                 if (_userStateService.CheckIsAdmin(chatId))
                 {
-                    await SendMessageWelcomeAdmin(chatId, username);
+                    await SendMessageWelcomeAdmin(chatId);
                 }
                 else
                 {
-                    await SendMessageWelcomeUser(chatId, username);
+                    await SendMessageWelcomeUser(chatId);
                 }
             }
             catch (Exception ex)
@@ -104,7 +94,7 @@ namespace MindBot.Services.Services
             }
         }
 
-        public async Task SendMessageWelcomeUser(long chatId, string username)
+        public async Task SendMessageWelcomeUser(long chatId)
         {
             try
             {
@@ -122,7 +112,7 @@ namespace MindBot.Services.Services
                     text: SystemEnum.WelcomeMessageUser.ToStringValue(),
                     replyMarkup: replyMarkup);
 
-                _logger.LogInformation("Приветствие пользователя: {Username}", username);
+                _logger.LogInformation("Приветствие пользователя: {chatId}", chatId);
             }
             catch (Exception ex)
             {
@@ -130,7 +120,7 @@ namespace MindBot.Services.Services
             }
         }
 
-        public async Task SendMessageWelcomeAdmin(long chatId, string username)
+        public async Task SendMessageWelcomeAdmin(long chatId)
         {
             try
             {
@@ -138,7 +128,7 @@ namespace MindBot.Services.Services
                     chatId: chatId,
                     text: SystemEnum.WelcomeMessageAdmin.ToStringValue());
 
-                _logger.LogInformation("Приветствие пользователя с ролью администратор: {Username}", username);
+                _logger.LogInformation("Приветствие пользователя с ролью администратор: {chatId}", chatId);
             }
             catch (Exception ex)
             {
@@ -148,7 +138,7 @@ namespace MindBot.Services.Services
         #endregion Welcome
 
         #region Testing
-        public async Task SendCommandTestStart(long chatId, string username)
+        public async Task SendCommandTestStart(long chatId)
         {
             try
             {
@@ -167,7 +157,7 @@ namespace MindBot.Services.Services
 
                 await SendCommandQuestion(chatId, questions[0]);
 
-                _logger.LogInformation("Тест начат для пользователя: {Username}", username);
+                _logger.LogInformation("Тест начат для пользователя: {chatId}", chatId);
             }
             catch (Exception ex)
             {
@@ -214,8 +204,8 @@ namespace MindBot.Services.Services
 
                 await _userStateService.AddAnswer(chatId, answer[0]);
 
-                _logger.LogInformation("Сохранен ответ '{Answer}' для вопроса {QuestionNumber} пользователя {Username}",
-                    answer, userState.CurrentQuestion, userState.Username);
+                _logger.LogInformation("Сохранен ответ '{Answer}' для вопроса {QuestionNumber} пользователя {chatId}",
+                    answer, userState.CurrentQuestion, chatId);
 
                 /// Проверяем завершение теста
 
@@ -248,7 +238,7 @@ namespace MindBot.Services.Services
                         text: messageResult,
                         replyMarkup: getResultBonusKeyboard);
 
-                    _logger.LogInformation("Тест заверешен для пользователя {Username}, {ChatId}", userState.Username, chatId);
+                    _logger.LogInformation("Тест заверешен для пользователя {ChatId}", chatId);
                 }
                 else
                 {
@@ -318,6 +308,7 @@ namespace MindBot.Services.Services
             {
                 var chatId = callbackQuery.Message!.Chat.Id;
                 var callbackData = callbackQuery.Data;
+                var linkToUser = $"tg://user?id={chatId}";
 
                 var userState = await _userStateService.GetUserState(chatId);
 
@@ -343,16 +334,15 @@ namespace MindBot.Services.Services
                         /// Уведомление админам о консультации
 
                         foreach (var adminId in Settings.UserIdAdmin)
-                        {
-                            var message = $"👤 Пользователь @{userState.Username} (ID: {chatId}) хочет консультацию.\n" +
-                                $"Результат теста: {string.Join(',', userState.Answers)}";
+                        {                            
+                            var message = $"👤 Пользователь {linkToUser} \n хочет консультацию";
 
                             await _botClient.SendMessage(
                                 chatId: adminId,
                                 text: message);
                         }
 
-                        _logger.LogInformation($"Пользователь выбрал бонус \"консультация\" username: {userState.Username}, chatId: {userState.ChatId}");
+                        _logger.LogInformation($"Пользователь выбрал бонус \"консультация\" chatId: {userState.ChatId}");
                     }
                     else if (callbackData == BonusTypeEnum.VipChannel.ToCodeValue())
                     {
@@ -373,14 +363,14 @@ namespace MindBot.Services.Services
 
                         foreach (var adminId in Settings.UserIdAdmin)
                         {
-                            var message = $"👤 Пользователь @{userState.Username} (ID: {chatId}) получил ссылку на закрытый телеграм-канал.";
+                            var message = $"👤 Пользователь {linkToUser} \n получил ссылку на закрытый телеграм-канал";
 
                             await _botClient.SendMessage(
                                 chatId: adminId,
                                 text: message);
                         }
 
-                        _logger.LogInformation($"Пользователь выбрал бонус \"закрытый телеграм канал\" username: {userState.Username}, chatId: {userState.ChatId}");
+                        _logger.LogInformation($"Пользователь выбрал бонус \"закрытый телеграм канал\" chatId: {userState.ChatId}");
                     }
                     else
                     {
