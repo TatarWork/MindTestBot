@@ -309,6 +309,9 @@ namespace MindBot.Services.Services
                 var chatId = callbackQuery.Message!.Chat.Id;
                 var callbackData = callbackQuery.Data;
                 var linkToUser = $"tg://user?id={chatId}";
+                var userNameFromChat = $"@{callbackQuery.From?.Username ?? string.Empty}";
+
+                var userName = userNameFromChat == "@" ? linkToUser : userNameFromChat;
 
                 var userState = await _userStateService.GetUserState(chatId);
 
@@ -335,7 +338,7 @@ namespace MindBot.Services.Services
 
                         foreach (var adminId in Settings.UserIdAdmin)
                         {                            
-                            var message = $"👤 Пользователь {linkToUser} \n хочет консультацию";
+                            var message = $"👤 Пользователь {userName} \n хочет консультацию";
 
                             await _botClient.SendMessage(
                                 chatId: adminId,
@@ -363,7 +366,7 @@ namespace MindBot.Services.Services
 
                         foreach (var adminId in Settings.UserIdAdmin)
                         {
-                            var message = $"👤 Пользователь {linkToUser} \n получил ссылку на закрытый телеграм-канал";
+                            var message = $"👤 Пользователь {userName} \n получил ссылку на закрытый телеграм-канал";
 
                             await _botClient.SendMessage(
                                 chatId: adminId,
