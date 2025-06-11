@@ -97,7 +97,7 @@ namespace MindBot.EF.Repositories
                 existEntity.CurrentQuestion = entity.CurrentQuestion;
                 existEntity.IsCompleted = entity.IsCompleted;
                 existEntity.IsGetBonus = entity.IsGetBonus;
-                existEntity.UpdatedAt = DateTime.UtcNow;
+                existEntity.UpdatedAt = DateTime.Now;
 
                 _db.Update(existEntity);
             }
