@@ -41,24 +41,36 @@ namespace MindBot.Services.Services
             try
             {
                 var chatId = message.Chat.Id;
+                var messageType = message.Type;
 
-                switch (message.Text?.Trim())
+                if(messageType == Telegram.Bot.Types.Enums.MessageType.Contact)
                 {
-                    /// Приветствие
-                    case Settings.CommandBotStart:
-                        await SendCommandWelcome(chatId);
-                        break;
-
-                    /// Запуск тестирования
-                    case Settings.CommandTestStart:
-                        await SendCommandTestStart(chatId);
-                        break;
-
-                    /// Обработка ответов в ходе тестирования
-                    default:
-                        await SendCommandTestAnswer(chatId, message.Text);
-                        break;
+                    await SendUserPhone(chatId, message.Contact);
                 }
+                else if(messageType == Telegram.Bot.Types.Enums.MessageType.Text)
+                {
+                    switch (message.Text?.Trim().ToLower())
+                    {
+                        /// Приветствие
+                        case Settings.CommandBotStart:
+                            await SendCommandWelcome(chatId);
+                            break;
+
+                        /// Запуск тестирования
+                        case Settings.CommandTestStart:
+                            await SendCommandTestStart(chatId);
+                            break;
+
+                        case Settings.CommandGetConsulting:
+                            await SendCommandGetConsulting(chatId);
+                            break;
+
+                        /// Обработка ответов в ходе тестирования
+                        default:
+                            await SendCommandTestAnswer(chatId, message.Text);
+                            break;
+                    }
+                }                    
             }
             catch (Exception ex)
             {
@@ -392,5 +404,67 @@ namespace MindBot.Services.Services
             }
         }
         #endregion BonusResult
+
+        private async Task SendCommandGetConsulting(long chatId)
+        {
+            try
+            {
+                var replyMarkup =
+                    new ReplyKeyboardMarkup(new[]
+                    {
+                        new KeyboardButton("📞 Оставить номер")
+                        {
+                            RequestContact = true
+                        }
+                    })
+                    {
+                        ResizeKeyboard = true,
+                    };
+
+                await _botClient.SendMessage(chatId: chatId,
+                    text: "Оставьте телефон для связи",
+                    replyMarkup: replyMarkup);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"Ошибка в методе {LogHelper.GetMethodName(_thisType, nameof(SendCommandGetConsulting))}: {ex.GetFullException()}");
+
+                throw new Exception($"Возникла ошибка при запросе номера телефона пользователя для консультации: {ex.Message}");
+            }
+        }
+
+        private async Task SendUserPhone(long chatId, Contact contact)
+        {
+            try
+            {
+                var userState = await _userStateService.GetUserState(chatId);
+
+                var phoneNumber = contact.PhoneNumber;
+
+                userState.PhoneForConsulting = phoneNumber;
+
+                await _userStateService.UpdateUserState(chatId, userState);
+
+                foreach (var adminId in Settings.UserIdAdmin)
+                {
+                    var message = $"👤 Пользователь {contact.FirstName} {contact.LastName} \n оставил номер телефона для платной консультации {phoneNumber}";
+
+                    await _botClient.SendMessage(
+                        chatId: adminId,
+                        text: message);
+                }
+
+                await _botClient.SendMessage(
+                    chatId: chatId,
+                    text: "Благодарю, свяжусь с вами в течение часа",
+                    replyMarkup: new ReplyKeyboardRemove());
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"Ошибка в методе {LogHelper.GetMethodName(_thisType, nameof(SendUserPhone))}: {ex.GetFullException()}");
+
+                throw new Exception($"Возникла ошибка при сохранении номера телефона пользователя для консультации: {ex.Message}");
+            }
+        }
     }
 }

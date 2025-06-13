@@ -74,5 +74,15 @@ namespace MindBot.EF.Entities
             get => System.Text.Json.JsonSerializer.Deserialize<List<char>>(AnswersJson)!;
             set => AnswersJson = System.Text.Json.JsonSerializer.Serialize(value);
         }
+
+        /// <summary>
+        /// Флаг - пользователю отправлен запрос на консультацию
+        /// </summary>
+        public bool IsSendConsultNotifier { get; set; }
+
+        /// <summary>
+        /// Номер телефона для консультации
+        /// </summary>
+        public string? PhoneForConsulting { get; set; }
     }
 }
