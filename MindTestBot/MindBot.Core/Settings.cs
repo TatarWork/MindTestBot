@@ -20,6 +20,11 @@
         /// <summary>
         /// Команда запуска тестирования
         /// </summary>
-        public const string CommandTestStart = "⚡️Начать тест";
+        public const string CommandTestStart = "⚡️начать тест";
+
+        /// <summary>
+        /// Команда отправки запроса на консультацию
+        /// </summary>
+        public const string CommandGetConsulting = "хочу";
     }
 }

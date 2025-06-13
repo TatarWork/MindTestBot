@@ -17,5 +17,9 @@ namespace MindBot.Services.Models
         public UserStateEnum State { get; set; }
 
         public List<char> Answers { get; set; } = new List<char>();
+
+        public bool IsSendConsultNotifier { get; set; }
+
+        public string? PhoneForConsulting { get; set; }
     }
 }
