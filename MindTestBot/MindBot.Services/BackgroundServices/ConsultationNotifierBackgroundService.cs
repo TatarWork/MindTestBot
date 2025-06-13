@@ -81,7 +81,7 @@ namespace MindBot.Services.BackgroundServices
                         {
                             await dbTransaction.RollbackAsync();
 
-                            throw new Exception(ex.Message, ex);
+                            _logger.LogError(ex.GetFullException());
                         }
                     }
 
