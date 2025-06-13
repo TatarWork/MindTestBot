@@ -42,6 +42,8 @@ namespace MindBot.Services.Services
                     IsCompleted = userState.IsCompleted,
                     IsGetBonus = userState.IsGetBonus,
                     State = userState.State,
+                    IsSendConsultNotifier = userState.IsSendConsultNotifier,
+                    PhoneForConsulting = userState.PhoneForConsulting,
                 };
 
                 return result;
@@ -147,6 +149,7 @@ namespace MindBot.Services.Services
                 userStateEntity.CurrentQuestion = userState.CurrentQuestion;
                 userStateEntity.IsCompleted = userState.IsCompleted;
                 userStateEntity.IsGetBonus = userState.IsGetBonus;
+                userStateEntity.PhoneForConsulting = userState.PhoneForConsulting;
 
                 await _userStateRepository.UpdateUserState(chatId, userStateEntity);
                 await _userStateRepository.SaveAsync();

@@ -107,6 +107,8 @@ void ConfigureServices(IServiceCollection services, WebApplicationBuilder builde
 
     /// Регистрируем фоновый сервис
     builder.Services.AddHostedService<BotBackgroundService>();
+    builder.Services.AddHostedService<ConsultationNotifierBackgroundService>();
+
 
     var strHostValue = builder.Configuration["AppHost:HostValue"];
     builder.WebHost.UseUrls(strHostValue);
