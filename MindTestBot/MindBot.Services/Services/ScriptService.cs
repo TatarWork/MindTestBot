@@ -113,10 +113,10 @@ namespace MindBot.Services.Services
                 var replyMarkup =
                     new ReplyKeyboardMarkup(new[]
                     {
-                        new KeyboardButton(Settings.CommandTestStart),
+                        new KeyboardButton(Settings.CommandTestStart.ToUpper()),
                     })
                     {
-                        ResizeKeyboard = true,
+                        ResizeKeyboard = true,                        
                     };
 
                 await _botClient.SendMessage(
