@@ -35,7 +35,7 @@ namespace MindBot.Core.Extensions
             switch (value)
             {
                 case SystemEnum.WelcomeMessageUser:
-                    return @"Давай начнем тест";
+                    return @"Давай начнем тест, нажми кнопку внизу ⬇️";
                 case SystemEnum.WelcomeMessageAdmin:
                     return "Это чат-бот Дарьи Татар, сюда будут приходить уведомления о пользователях прошедших тестирование";
                 case SystemEnum.StartTesting:
